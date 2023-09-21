@@ -26,11 +26,11 @@ defmodule BananaBank.Users.User do
   end
 
   defp add_password_hash(
-    %Ecto.Changeset{
-      valid?: true,
-      changes: %{password: password}
-    } = changeset
-  ) do
+         %Ecto.Changeset{
+           valid?: true,
+           changes: %{password: password}
+         } = changeset
+       ) do
     password_hash = Pbkdf2.hash_pwd_salt(password)
 
     change(changeset, %{password_hash: password_hash})
