@@ -14,7 +14,7 @@ defmodule BananaBankWeb.ErrorJSON do
   end
 
   def error(%{changeset: changeset}) do
-    %{errors: Ecto.Changeset.traverse_errors(changeset, &translate_errors/1)
+    %{errors: Ecto.Changeset.traverse_errors(changeset, &translate_errors/1)}
   end
 
   def translate_errors ({msg, opts}) do
