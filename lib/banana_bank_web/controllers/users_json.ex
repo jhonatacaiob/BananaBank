@@ -13,7 +13,7 @@ defmodule BananaBankWeb.UsersJSON do
       id: user.id,
       cep: user.cep,
       email: user.email,
-      name: user.name,
+      name: user.name
     }
   end
 end
