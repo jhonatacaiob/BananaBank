@@ -7,6 +7,5 @@ defmodule BananaBank.Users.Get do
       nil -> {:error, :not_found}
       user -> {:ok, user}
     end
-
   end
 end
