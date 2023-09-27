@@ -1,28 +1,22 @@
 defmodule BananaBankWeb.UsersControllerTest do
   use BananaBankWeb.ConnCase
 
-  alias BananaBank.Users
-  alias Users.User
-
-  @user_params %{
-    name: "usuario",
-    email: "usuario@email.com",
-    password: "1234566",
-    cep: "12345336"
-  }
+  import BananaBank.Factory
 
   describe "create/2" do
     test "Create user successfully", %{conn: conn} do
+      user = build(:user_create)
+
       response =
         conn
-        |> post(~p"/api/users/", @user_params)
+        |> post(~p"/api/users/", user)
         |> json_response(:created)
 
       expected_response = %{
         "data" => %{
-          "cep" => "12345336",
-          "email" => "usuario@email.com",
-          "name" => "usuario"
+          "cep" => user.cep,
+          "email" => user.email,
+          "name" => user.name
         },
         "message" => "User criado com sucesso!"
       }
@@ -31,14 +25,11 @@ defmodule BananaBankWeb.UsersControllerTest do
     end
 
     test "create user fails when it has invalid arguments", %{conn: conn} do
+      user = build(:user_create, password: "123", email: "email", cep: "123")
+
       response =
         conn
-        |> post(~p"/api/users/", %{
-          name: "usuario",
-          email: "usuario",
-          password: "1236",
-          cep: "12345"
-        })
+        |> post(~p"/api/users/", user)
         |> json_response(:bad_request)
 
       expected_response = %{
@@ -72,19 +63,19 @@ defmodule BananaBankWeb.UsersControllerTest do
   end
 
   describe "delete/2" do
-    test "Create user successfully", %{conn: conn} do
-      {:ok, %User{id: id}} = Users.create(@user_params)
+    test "delete user successfully", %{conn: conn} do
+      user = insert(:user)
 
       response =
         conn
-        |> delete(~p"/api/users/#{id}")
+        |> delete(~p"/api/users/#{user.id}")
         |> json_response(:ok)
 
       expected_response = %{
         "data" => %{
-          "cep" => "12345336",
-          "email" => "usuario@email.com",
-          "name" => "usuario"
+          "cep" => user.cep,
+          "email" => user.email,
+          "name" => user.name
         },
         "message" => "User excluido com sucesso"
       }
