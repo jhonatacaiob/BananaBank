@@ -1,16 +1,21 @@
 defmodule BananaBankWeb.UsersControllerTest do
   use BananaBankWeb.ConnCase
 
+  alias BananaBank.Users
+  alias Users.User
+
+  @user_params %{
+    name: "usuario",
+    email: "usuario@email.com",
+    password: "1234566",
+    cep: "12345336"
+  }
+
   describe "create/2" do
     test "Create user successfully", %{conn: conn} do
       response =
         conn
-        |> post(~p"/api/users/", %{
-          name: "usuario",
-          email: "usuario@email.com",
-          password: "1234566",
-          cep: "12345336"
-        })
+        |> post(~p"/api/users/", @user_params)
         |> json_response(:created)
 
       expected_response = %{
@@ -60,6 +65,28 @@ defmodule BananaBankWeb.UsersControllerTest do
           "password" => ["can't be blank"],
           "name" => ["can't be blank"]
         }
+      }
+
+      assert response == expected_response
+    end
+  end
+
+  describe "delete/2" do
+    test "Create user successfully", %{conn: conn} do
+      {:ok, %User{id: id}} = Users.create(@user_params)
+
+      response =
+        conn
+        |> delete(~p"/api/users/#{id}")
+        |> json_response(:ok)
+
+      expected_response = %{
+        "data" => %{
+          "cep" => "12345336",
+          "email" => "usuario@email.com",
+          "name" => "usuario"
+        },
+        "message" => "User excluido com sucesso"
       }
 
       assert response == expected_response
