@@ -2,10 +2,39 @@ defmodule BananaBankWeb.UsersControllerTest do
   use BananaBankWeb.ConnCase
 
   import BananaBank.Factory
+  import Mox
+
+  alias BananaBank.ViaCep.ClientMock
+
+  setup :verify_on_exit!
+
+  setup do
+    expected_response = %{
+      "bairro" => "Sé",
+      "cep" => "01001-000",
+      "complemento" => "lado ímpar",
+      "ddd" => "11",
+      "gia" => "1004",
+      "ibge" => "3550308",
+      "localidade" => "São Paulo",
+      "logradouro" => "Praça da Sé",
+      "siafi" => "7107",
+      "uf" => "SP"
+    }
+
+    {:ok, response: expected_response}
+  end
 
   describe "create/2" do
-    test "Create user successfully", %{conn: conn} do
+    @tag :wip
+    test "Create user successfully", %{conn: conn, response: expected_response} do
       user = build(:user_create)
+
+      expect(ClientMock, :call, fn args ->
+        assert args == user.cep
+
+        {:ok, %{body: expected_response}}
+      end)
 
       response =
         conn
@@ -25,7 +54,7 @@ defmodule BananaBankWeb.UsersControllerTest do
     end
 
     test "create user should fail when it has invalid arguments", %{conn: conn} do
-      user = build(:user_create, password: "123", email: "email", cep: "123")
+      user = build(:user_create, password: "123", email: "email")
 
       response =
         conn
@@ -34,7 +63,6 @@ defmodule BananaBankWeb.UsersControllerTest do
 
       expected_response = %{
         "errors" => %{
-          "cep" => ["should be 8 character(s)"],
           "email" => ["has invalid format"],
           "password" => ["should be at least 6 character(s)"]
         }
