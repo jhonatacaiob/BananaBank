@@ -24,7 +24,7 @@ defmodule BananaBankWeb.UsersControllerTest do
       assert response == expected_response
     end
 
-    test "create user fails when it has invalid arguments", %{conn: conn} do
+    test "create user should fail when it has invalid arguments", %{conn: conn} do
       user = build(:user_create, password: "123", email: "email", cep: "123")
 
       response =
@@ -43,7 +43,7 @@ defmodule BananaBankWeb.UsersControllerTest do
       assert response == expected_response
     end
 
-    test "create user fails when required key is missing", %{conn: conn} do
+    test "create user should fail when required key is missing", %{conn: conn} do
       response =
         conn
         |> post(~p"/api/users/", %{})
@@ -57,6 +57,38 @@ defmodule BananaBankWeb.UsersControllerTest do
           "name" => ["can't be blank"]
         }
       }
+
+      assert response == expected_response
+    end
+  end
+
+  describe "get/2" do
+    test "get user successfully", %{conn: conn} do
+      user = insert(:user)
+
+      response =
+        conn
+        |> get(~p"/api/users/#{user.id}")
+        |> json_response(:ok)
+
+      expected_response = %{
+        "data" => %{
+          "cep" => user.cep,
+          "email" => user.email,
+          "name" => user.name
+        },
+      }
+
+      assert response == expected_response
+    end
+
+    test "get user should fail when id not exists", %{conn: conn} do
+      response =
+        conn
+        |> get(~p"/api/users/999")
+        |> json_response(:not_found)
+
+      expected_response = %{"message" => "User not found", "status" => "not_found"}
 
       assert response == expected_response
     end
@@ -79,6 +111,17 @@ defmodule BananaBankWeb.UsersControllerTest do
         },
         "message" => "User excluido com sucesso"
       }
+
+      assert response == expected_response
+    end
+
+    test "delete user should fail when id not exists", %{conn: conn} do
+      response =
+        conn
+        |> delete(~p"/api/users/999")
+        |> json_response(:not_found)
+
+      expected_response = %{"message" => "User not found", "status" => "not_found"}
 
       assert response == expected_response
     end
