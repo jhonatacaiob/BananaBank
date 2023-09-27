@@ -60,6 +60,20 @@ defmodule BananaBankWeb.UsersControllerTest do
 
       assert response == expected_response
     end
+
+    test "create user should fail if the email already exists", %{conn: conn} do
+      user = insert(:user)
+      new_user = build(:user_create, email: user.email)
+
+      response =
+        conn
+        |> post(~p"/api/users/", new_user)
+        |> json_response(:bad_request)
+
+      expected_response =  %{"errors" => %{"email" => ["has already been taken"]}}
+
+      assert response == expected_response
+    end
   end
 
   describe "get/2" do
@@ -126,6 +140,20 @@ defmodule BananaBankWeb.UsersControllerTest do
         |> json_response(:not_found)
 
       expected_response = %{"message" => "User not found", "status" => "not_found"}
+
+      assert response == expected_response
+    end
+
+    test "update user should fail if the email already exists", %{conn: conn} do
+      user = insert(:user)
+      new_user = build(:user_create, email: user.email)
+
+      response =
+        conn
+        |> post(~p"/api/users/", new_user)
+        |> json_response(:bad_request)
+
+      expected_response =  %{"errors" => %{"email" => ["has already been taken"]}}
 
       assert response == expected_response
     end
