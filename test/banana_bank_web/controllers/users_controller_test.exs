@@ -70,7 +70,7 @@ defmodule BananaBankWeb.UsersControllerTest do
         |> post(~p"/api/users/", new_user)
         |> json_response(:bad_request)
 
-      expected_response =  %{"errors" => %{"email" => ["has already been taken"]}}
+      expected_response = %{"errors" => %{"email" => ["has already been taken"]}}
 
       assert response == expected_response
     end
@@ -90,7 +90,7 @@ defmodule BananaBankWeb.UsersControllerTest do
           "cep" => user.cep,
           "email" => user.email,
           "name" => user.name
-        },
+        }
       }
 
       assert response == expected_response
@@ -102,7 +102,7 @@ defmodule BananaBankWeb.UsersControllerTest do
         |> get(~p"/api/users/999")
         |> json_response(:not_found)
 
-      expected_response = %{"message" => "User not found", "status" => "not_found"}
+      expected_response = %{"message" => "Resource not found", "status" => "not_found"}
 
       assert response == expected_response
     end
@@ -139,7 +139,7 @@ defmodule BananaBankWeb.UsersControllerTest do
         |> put(~p"/api/users/#{999}", new_user)
         |> json_response(:not_found)
 
-      expected_response = %{"message" => "User not found", "status" => "not_found"}
+      expected_response = %{"message" => "Resource not found", "status" => "not_found"}
 
       assert response == expected_response
     end
@@ -153,7 +153,7 @@ defmodule BananaBankWeb.UsersControllerTest do
         |> post(~p"/api/users/", new_user)
         |> json_response(:bad_request)
 
-      expected_response =  %{"errors" => %{"email" => ["has already been taken"]}}
+      expected_response = %{"errors" => %{"email" => ["has already been taken"]}}
 
       assert response == expected_response
     end
@@ -186,7 +186,7 @@ defmodule BananaBankWeb.UsersControllerTest do
         |> delete(~p"/api/users/999")
         |> json_response(:not_found)
 
-      expected_response = %{"message" => "User not found", "status" => "not_found"}
+      expected_response = %{"message" => "Resource not found", "status" => "not_found"}
 
       assert response == expected_response
     end
