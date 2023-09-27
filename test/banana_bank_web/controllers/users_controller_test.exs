@@ -94,6 +94,43 @@ defmodule BananaBankWeb.UsersControllerTest do
     end
   end
 
+  describe "update/2" do
+    test "Update user successfully", %{conn: conn} do
+      user = insert(:user)
+
+      new_user = build(:user_create)
+
+      response =
+        conn
+        |> put(~p"/api/users/#{user.id}", new_user)
+        |> json_response(:ok)
+
+      expected_response = %{
+        "data" => %{
+          "cep" => new_user.cep,
+          "email" => new_user.email,
+          "name" => new_user.name
+        },
+        "message" => "User alterado com sucesso"
+      }
+
+      assert response == expected_response
+    end
+
+    test "Update user should fail when id not exists", %{conn: conn} do
+      new_user = build(:user_create)
+
+      response =
+        conn
+        |> put(~p"/api/users/#{999}", new_user)
+        |> json_response(:not_found)
+
+      expected_response = %{"message" => "User not found", "status" => "not_found"}
+
+      assert response == expected_response
+    end
+  end
+
   describe "delete/2" do
     test "delete user successfully", %{conn: conn} do
       user = insert(:user)
