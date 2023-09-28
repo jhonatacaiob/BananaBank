@@ -12,7 +12,6 @@ defmodule BananaBank.ViaCep.ClientTest do
 
   describe "call/1" do
     test "successfully returns cep info", %{bypass: bypass} do
-
       body_response = ~s({
         "bairro": "Sé",
         "cep": "01001-000",

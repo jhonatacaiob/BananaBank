@@ -3,7 +3,6 @@ defmodule BananaBank.ViaCep.Client do
 
   alias BananaBank.ViaCep.ClientBehaviour
 
-
   @base_url "https://viacep.com.br/ws"
   plug Tesla.Middleware.JSON
 
