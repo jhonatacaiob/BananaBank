@@ -11,6 +11,12 @@ defmodule BananaBank.Users.Create do
     end
   end
 
+  def call(params) do
+    params
+    |> User.changeset()
+    |> Repo.insert()
+  end
+
   defp client() do
     Application.get_env(:banana_bank, :via_cep_client, ViaCepClient)
   end

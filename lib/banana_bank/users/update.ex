@@ -10,8 +10,14 @@ defmodule BananaBank.Users.Update do
   end
 
   defp update(user, params) do
-    user
-    |> User.changeset(params)
-    |> Repo.update()
+    with {:ok, _result} <- client().call(params["cep"]) do
+      user
+      |> User.changeset(params)
+      |> Repo.update()
+    end
+  end
+
+  defp client() do
+    Application.get_env(:banana_bank, :via_cep_client, ViaCepClient)
   end
 end

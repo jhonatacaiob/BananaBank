@@ -27,13 +27,13 @@ defmodule BananaBankWeb.UsersControllerTest do
 
   describe "create/2" do
     @tag :wip
-    test "Create user successfully", %{conn: conn, response: expected_response} do
+    test "Create user successfully", %{conn: conn, response: mock_response} do
       user = build(:user_create)
 
       expect(ClientMock, :call, fn args ->
         assert args == user.cep
 
-        {:ok, %{body: expected_response}}
+        {:ok, %{body: mock_response}}
       end)
 
       response =
@@ -53,8 +53,17 @@ defmodule BananaBankWeb.UsersControllerTest do
       assert response == expected_response
     end
 
-    test "create user should fail when it has invalid arguments", %{conn: conn} do
-      user = build(:user_create, password: "123", email: "email")
+    test "create user should fail when it has invalid arguments", %{
+      conn: conn,
+      response: mock_response
+    } do
+      user = build(:user_create, cep: "123123", password: "123", email: "email")
+
+      expect(ClientMock, :call, fn args ->
+        assert args == user.cep
+
+        {:ok, %{body: mock_response}}
+      end)
 
       response =
         conn
@@ -63,6 +72,7 @@ defmodule BananaBankWeb.UsersControllerTest do
 
       expected_response = %{
         "errors" => %{
+          "cep" => ["should be 8 character(s)"],
           "email" => ["has invalid format"],
           "password" => ["should be at least 6 character(s)"]
         }
@@ -89,9 +99,18 @@ defmodule BananaBankWeb.UsersControllerTest do
       assert response == expected_response
     end
 
-    test "create user should fail if the email already exists", %{conn: conn} do
+    test "create user should fail if the email already exists", %{
+      conn: conn,
+      response: mock_response
+    } do
       user = insert(:user)
       new_user = build(:user_create, email: user.email)
+
+      expect(ClientMock, :call, fn args ->
+        assert args == user.cep
+
+        {:ok, %{body: mock_response}}
+      end)
 
       response =
         conn
@@ -137,10 +156,16 @@ defmodule BananaBankWeb.UsersControllerTest do
   end
 
   describe "update/2" do
-    test "Update user successfully", %{conn: conn} do
+    test "Update user successfully", %{conn: conn, response: mock_response} do
       user = insert(:user)
 
       new_user = build(:user_create)
+
+      expect(ClientMock, :call, fn args ->
+        assert args == new_user.cep
+
+        {:ok, %{body: mock_response}}
+      end)
 
       response =
         conn
@@ -172,9 +197,18 @@ defmodule BananaBankWeb.UsersControllerTest do
       assert response == expected_response
     end
 
-    test "update user should fail if the email already exists", %{conn: conn} do
+    test "update user should fail if the email already exists", %{
+      conn: conn,
+      response: mock_response
+    } do
       user = insert(:user)
       new_user = build(:user_create, email: user.email)
+
+      expect(ClientMock, :call, fn args ->
+        assert args == new_user.cep
+
+        {:ok, %{body: mock_response}}
+      end)
 
       response =
         conn
