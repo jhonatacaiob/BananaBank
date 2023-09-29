@@ -15,10 +15,17 @@ defmodule BananaBankWeb.FallbackController do
     |> render(:error, status: :bad_request)
   end
 
-  def call(conn, {:error, changeset} = _error) do
+  def call(conn, {:error, %Ecto.Changeset{} = changeset} = _error) do
     conn
     |> put_status(:bad_request)
     |> put_view(json: BananaBankWeb.ErrorJSON)
     |> render(:error, changeset: changeset)
+  end
+
+  def call(conn, {:error, msg} = _error) do
+    conn
+    |> put_status(:bad_request)
+    |> put_view(json: BananaBankWeb.ErrorJSON)
+    |> render(:error, msg: msg)
   end
 end

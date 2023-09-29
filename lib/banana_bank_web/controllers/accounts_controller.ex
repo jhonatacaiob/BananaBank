@@ -5,11 +5,21 @@ defmodule BananaBankWeb.AccountsController do
 
   action_fallback BananaBankWeb.FallbackController
 
+  @spec create(any, :invalid | %{optional(:__struct__) => none, optional(atom | binary) => any}) ::
+          any
   def create(conn, params) do
     with {:ok, %Account{} = account} <- Accounts.create(params) do
       conn
       |> put_status(:created)
       |> render(:create, account: account)
+    end
+  end
+
+  def transaction(conn, params) do
+    with {:ok, transaction} <- Accounts.transaction(params) do
+      conn
+      |> put_status(:ok)
+      |> render(:transaction, transaction: transaction)
     end
   end
 end

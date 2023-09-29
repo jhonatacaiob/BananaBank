@@ -1,11 +1,18 @@
 defmodule BananaBankWeb.AccountsJSON do
   def create(%{account: account}) do
-    IO.inspect(account)
     %{
       message: "Conta criada com sucesso!",
+      data: account
+    }
+  end
+
+  def transaction(%{transaction: %{withdraw: from_account, deposit: to_account}}) do
+    %{
+      message: "Transferencia realizada!",
       data: %{
-        balance: account.balance,
-      },
+        from_account: from_account,
+        to_account: to_account
+      }
     }
   end
 end

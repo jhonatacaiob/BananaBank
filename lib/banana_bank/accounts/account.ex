@@ -7,6 +7,7 @@ defmodule BananaBank.Accounts.Account do
 
   @required_params [:balance, :user_id]
 
+  @derive {Jason.Encoder, only: [:user_id, :balance]}
   schema "accounts" do
     field :balance, :decimal
     belongs_to :user, User
