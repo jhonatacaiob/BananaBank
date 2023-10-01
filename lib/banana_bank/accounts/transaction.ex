@@ -41,5 +41,5 @@ defmodule BananaBank.Accounts.Transaction do
   end
 
   defp handle_transaction({:ok, _result} = result), do: result
-  defp handle_transaction({:error, _op}, reason, _), do: {:error, reason}
+  defp handle_transaction({:error, _op, reason, _}), do: {:error, reason}
 end
