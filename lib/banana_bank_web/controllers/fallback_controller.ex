@@ -22,6 +22,13 @@ defmodule BananaBankWeb.FallbackController do
     |> render(:error, changeset: changeset)
   end
 
+  def call(conn, {:error, :unauthorized} = _error) do
+    conn
+    |> put_status(:unauthorized)
+    |> put_view(json: BananaBankWeb.ErrorJSON)
+    |> render(:error, status: :unauthorized)
+  end
+
   def call(conn, {:error, msg} = _error) do
     conn
     |> put_status(:bad_request)
